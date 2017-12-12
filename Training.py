@@ -12,23 +12,23 @@ status_count_dict = dict()
 emit_dict = dict()
 
 
-def add_training_file(filepath, open_folder=False):
+def add_file(filepath, file_list, open_folder=False):
     if os.path.isfile(filepath):
-        if filepath in training_files:
+        if filepath in file_list:
             print("##{0} already exists".format(filepath))
         else:
-            training_files.append(filepath)
+            file_list.append(filepath)
             print("##Add {0} to training files.".format(filepath))
     elif os.path.isdir(filepath):
         if open_folder == False:
             option = input("Seems that it's a folder, so add all the files inside as training files?(y/n)\n")
             if option.lower() == "y":
-                add_training_file(filepath, open_folder=True)
+                add_file(filepath, file_list, open_folder=True)
             else:
                 print("Okay, we ignore this folder.")
         else:
             for path in os.listdir(filepath):
-                add_training_file(os.path.join(filepath, path), open_folder=True)
+                add_file(os.path.join(filepath, path), file_list, open_folder=True)
 
 
 def statistic(filepath):
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         if path == "0":
             break
         elif os.path.exists(path):
-            add_training_file(path)
+            add_file(path, training_files)
         else:
             print("Can't find the file or folder!")
     if not training_files:
