@@ -67,7 +67,7 @@ def segment_for_file(filepath, save_path=None, sep="  "):
                 for status in status_set:
                     prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(line[i], 0),
                                              prev_status)
-                                            for prev_status in status_set if v[i-1][prev_status] > 0)
+                                            for prev_status in status_set)
 
                     v[i][status] = prob
                     new_path[status] = path[prev_status]+status
@@ -75,7 +75,7 @@ def segment_for_file(filepath, save_path=None, sep="  "):
                 #print(v[i], path, sep="\n")
             last_prob, last_status = max((v[length-1][status], status) for status in status_set)
             seg_line = ""
-            print(path[last_status])
+            # print(path[last_status])
             for i in range(length-1):
                 if path[last_status][i] == "S" or path[last_status][i] == "E":
                     seg_line += (line[i]+sep)
