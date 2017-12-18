@@ -31,7 +31,23 @@ def add_file(filepath, file_list, open_folder=False):
                 add_file(os.path.join(filepath, path), file_list, open_folder=True)
 
 
-def statistic(filepath):
+def cut_into_sentense(string=None, filepath=None):
+    seperator_Chinese = r"！？，。：……；"
+    seperator_English = r"!?,:;\n"
+    seperator = seperator_Chinese+seperator_English
+    if string:
+        return [s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), string) if s.strip()]
+    elif filepath:
+        sentenses = list()
+        with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
+            for line in file:
+                sentenses.extend(s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), line) if s.strip())
+        return sentenses
+    else:
+        return None
+
+
+def statistic(filepath, mode="line"):
     global line_num
     global all_characters_set
     global init_status_dict
@@ -40,36 +56,38 @@ def statistic(filepath):
     global status_count_dict
     global emit_dict
     with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
-        for line in file:
-            line = line.strip()
-            if not line:
-                continue
-            line_num += 1
-            # line_characters_list = list(line.replace(" ", ""))
-            line_characters_list = list(re.sub(r"[\s]{2,}", "", line))
-            all_characters_set = all_characters_set | set(line_characters_list)
-            line_word_list = re.split(r"[\s]{2,}", line)
-            line_status_list = []
-            for word in line_word_list:
-                if len(word) == 1:
-                    line_status_list.append("S")
-                elif len(word) >= 2:
-                    line_status_list.extend("B"+"M"*(len(word)-2)+"E")
-            # print(line_characters_list, line_status_list, sep="\n")
-            assert len(line_status_list) == len(line_characters_list), line
-            length = len(line_status_list)
-            for i in range(0, length):
-                status = line_status_list[i]
-                character = line_characters_list[i]
-                status_count_dict[status] += 1
-                if character in emit_dict[status].keys():
-                    emit_dict[status][character] += 1
-                else:
-                    emit_dict[status][character] = 1
-                if i == 0:
-                    init_status_dict[status] += 1
-                else:
-                    trans_dict[line_status_list[i-1]][status] += 1
+        for real_line in file:
+            sentense_or_line = cut_into_sentense(string=real_line) if mode == "sentense" else [real_line, ]
+            for line in sentense_or_line:
+                line = line.strip()
+                if not line:
+                    continue
+                line_num += 1
+                # line_characters_list = list(line.replace(" ", ""))
+                line_characters_list = list(re.sub(r"[\s]{2,}", "", line))
+                all_characters_set = all_characters_set | set(line_characters_list)
+                line_word_list = re.split(r"[\s]{2,}", line)
+                line_status_list = []
+                for word in line_word_list:
+                    if len(word) == 1:
+                        line_status_list.append("S")
+                    elif len(word) >= 2:
+                        line_status_list.extend("B"+"M"*(len(word)-2)+"E")
+                # print(line_characters_list, line_status_list, sep="\n")
+                assert len(line_status_list) == len(line_characters_list), line
+                length = len(line_status_list)
+                for i in range(0, length):
+                    status = line_status_list[i]
+                    character = line_characters_list[i]
+                    status_count_dict[status] += 1
+                    if character in emit_dict[status].keys():
+                        emit_dict[status][character] += 1
+                    else:
+                        emit_dict[status][character] = 1
+                    if i == 0:
+                        init_status_dict[status] += 1
+                    else:
+                        trans_dict[line_status_list[i-1]][status] += 1
 
 
 def save_training_result(folder="TrainingResult"):
@@ -80,7 +98,7 @@ def save_training_result(folder="TrainingResult"):
     global status_set
     global status_count_dict
     global emit_dict
-    folder = "TrainingResult" if not folder else folder
+    folder = folder or "TrainingResult"
     if not os.path.isdir(folder):
         os.mkdir(folder)
     for status in status_set:
@@ -125,7 +143,7 @@ if __name__ == "__main__":
         exit()
     for i, filepath in enumerate(training_files):
         print("##Start to handle {0}.".format(filepath))
-        statistic(filepath)
+        statistic(filepath, mode="sentense")
         print("##{0} has been handled successfully.".format(filepath))
     #print(line_num, all_characters_set, init_status_dict, trans_dict, status_set, status_count_dict, emit_dict, sep="\n")
     save_folder = input("Done! Please enter in which folder to save the training results:")
