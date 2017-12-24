@@ -53,7 +53,7 @@ Quite easy, isn't it?
 
 ![sentense-0](/Result/screenshots/sentense-0.png "sentense")
 
-![sentense-1](/Result/screenshots/sentense-0.png "sentense")
+![sentense-1](/Result/screenshots/sentense-1.png "sentense")
 
 ![help-0](/Result/screenshots/help-0.png "help")
 
