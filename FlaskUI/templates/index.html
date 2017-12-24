@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% block page_content%}
-
-<h1>Welcome to use Chinese Word Segmentation System.<small>Alpha 1.0</small></h1>
-<br/><br/>
+<div class="page-header">
+    <h1>Welcome to use Chinese Word Segmentation System.<small>Alpha 1.0</small></h1>
+</div>
 <ul class="nav nav-tabs">
   <li{% if not by_file %} class="active"{% endif %}><a href="{{url_for('index')}}">Enter text</a></li>
   <li{% if by_file %} class="active"{% endif %}><a href="{{url_for('index',by_file='1')}}">Upload file</a></li>

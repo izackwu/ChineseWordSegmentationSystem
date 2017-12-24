@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
+from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response, abort
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_script import Manager
@@ -7,7 +7,7 @@ from wtforms.validators import Required, Optional, DataRequired
 import sys
 sys.path.append("../")
 from Segmentation import init, cut_into_sentense, segment_for_sentense, segment_for_text
-
+from re import sub
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "The beacon."
 
@@ -21,7 +21,7 @@ class TextForm(FlaskForm):
                       choices=(("0", "Cut into sentenses first"), ("1", "Segment directly")),
                       validators=[DataRequired()]
                       )
-    submit = SubmitField("Submit")
+    submit = SubmitField("Segment")
 
 
 class FileForm(FlaskForm):
@@ -30,17 +30,39 @@ class FileForm(FlaskForm):
                       choices=(("0", "Cut into sentenses first"), ("1", "Segment directly")),
                       validators=[DataRequired()]
                       )
-    submit = SubmitField("Submit")
+    submit = SubmitField("Segment")
 
 
 class ResultForm(FlaskForm):
     result_text = TextAreaField()
 
 
+class SettingsForm(FlaskForm):
+    settings = TextAreaField()
+    submit = SubmitField("Modify")
+
+
+def segment(text):
+    global user_settings
+    rules = dict()
+    result = segment_for_text(text, mode="sentense")
+    try:
+        rules = {from_: to for from_, to in [(a.split("》》")[0], a.split('》》')[1])for a in user_settings.split('\n')]}
+    except:
+        flash("There're some errors in the user settings! So the settings are ignored.")
+    # print(rules)
+    for key in rules.keys():
+        result = sub(r"[\s]*".join(key), rules[key], result)
+    return result
+
+
 @app.route("/download", methods=["GET"])
 def download():
     global result_text
-    response = make_response(result_text)
+    try:
+        response = make_response(result_text)
+    except:
+        abort(404)
     response.headers["Content-Disposition"] = "attachment; filename=result.utf8;"
     return response
 
@@ -83,7 +105,7 @@ def index():
         #print("raw_text", raw_text)
         if mode == "0":
             return redirect(url_for("sentense"))
-        result_text = segment_for_text(raw_text, mode="sentense")
+        result_text = segment(raw_text)
         result_form.result_text.data = result_text
         download = True
     else:
@@ -102,7 +124,14 @@ def index():
 
 @app.route("/settings", methods=["GET", "POST"])
 def settings():
-    return ""
+    settings_form = SettingsForm()
+    new_settings = settings_form.settings.data
+    global user_settings
+    if new_settings is not None and user_settings != new_settings.strip():
+        flash("You have modified the settings successfully.")
+        user_settings = new_settings.strip()
+    settings_form.settings.data = user_settings
+    return render_template("settings.html", settings_form=settings_form)
 
 
 @app.route("/copyright", methods=["GET", "POST"])
@@ -126,4 +155,6 @@ def internal_server_error(e):
 
 if __name__ == '__main__':
     init(folder="../Result/sentense/Sentense_TrainingResult/")
+    global user_settings
+    user_settings = "生生灯火》》生生  灯火\n明暗无辄》》明暗无辄"
     manage.run()

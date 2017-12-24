@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block page_content%}
+<div class="page-header">
+    <h1>Help</h1>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">What's this system?</h3>
+    </div>
+    <div class="panel-body">
+        <p>This system is a simple Chinese Word Segmentation System, mainly based on HMM model.</p>
+        <p>It helps segment the Chinese text into seperated words.</p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">How to use it?</h3>
+    </div>
+    <div class="panel-body">
+        <p>In fact, the usage is quite easy!</p>
+        <p>Click <a href="{{ url_for('index') }}">'Start'</a> on th navbar and you will definitely know what to do.</p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">More settings?</h3>
+    </div>
+    <div class="panel-body">
+        <p>Easy, too.</p>
+        <p>Just click <a href="{{ url_for('settings') }}">'Settings'</a> on th navbar to personalize the settings.</p>
+        <p class="text-danger">One thing to note: as there's no account system yet, your setting will only be stored loclly.</p>
+        <p class="text-danger">That means your settings won't last long, sadly.</p>
+    </div>
+</div>
+
+{% endblock %}
