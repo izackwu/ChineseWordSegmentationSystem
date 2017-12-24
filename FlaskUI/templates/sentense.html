@@ -2,8 +2,8 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% block page_content%}
 
-<h1>The segmentation of the first {{num}} sentenses.</h1>
-<br/>
+<h1>The segmentation of the first {% if num >1 %} {{num}} {% endif %}sentense{% if num>1 %}s{% endif %}.</h1>
+<br/><br/>
 <div class="row">
     <div class="col-lg-6">
         <form class="bs-example bs-example-form" role="form">

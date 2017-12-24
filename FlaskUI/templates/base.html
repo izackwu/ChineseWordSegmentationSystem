@@ -1,15 +1,18 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Chinese Word Segmentation System{% endblock %}
+{% block title %}Chinese Word Segmentation System(Alpha 1.0){% endblock %}
 
 {% block head %}
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='FlaskUI.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='FlaskUI.ico') }}" type="image/x-icon">
+<style type="text/css">
+    body {padding-top: 70px}
+</style>
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -22,7 +25,18 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
+                <li><a href="/">Start</a></li>
+                <li><a href="{{ url_for('rules') }}">Rules</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        About<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('help') }}">Help</a></li>
+                        <li><a href="{{ url_for('copyright') }}">Copyright</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -37,7 +51,6 @@
         {{ message }}
     </div>
     {% endfor %}
-
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
