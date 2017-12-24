@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content%}
+
+<h1>The segmentation of the first {{num}} sentenses.</h1>
+<br/>
+<div class="row">
+    <div class="col-lg-6">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="col-lg-12">
+                {% for sentense in sentenses %}
+                <!--<div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox">
+                    </span>
+                -->
+                    <input type="text" class="form-control" value="{{ sentense }}"><br/>
+                <!--</div><br/>-->
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-6 has-success">
+        {% for sentense in result_sentenses %}
+        <input type="text" class="form-control" value="{{ sentense }}" id="inputSuccess"><br/>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
