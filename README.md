@@ -43,7 +43,23 @@ Quite easy, isn't it?
     * msr_test: 0.815
 * For more information, see `Result/`
 
+## How does it look like?
 
+![index-0](/Result/screenshots/index-0.png)
+
+![index-1](/Result/screenshots/index-1.png)
+
+![index-2](/Result/screenshots/index-2.png)
+
+![sentense-0](/Result/screenshots/sentense-0.png)
+
+![sentense-1](/Result/screenshots/sentense-0.png)
+
+![help-0](/Result/screenshots/help-0.png)
+
+![settings-0](/Result/screenshots/settings-0.png)
+
+![copyright-0](/Result/screenshots/copyright-0.png)
 
 
 
