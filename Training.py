@@ -37,7 +37,7 @@ def cut_into_sentense(string=None, filepath=None):
     seperator_English = r"!?,:;\n"
     seperator = seperator_Chinese+seperator_English
     if string:
-        return [s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), string) if s.strip()]
+        return [s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), string+"\n") if s.strip()]
     elif filepath:
         sentenses = list()
         with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:

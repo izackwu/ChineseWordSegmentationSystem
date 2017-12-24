@@ -50,7 +50,7 @@ def segment_for_sentense(sentense, sep="  "):
         v.append(dict())
         new_path = dict()
         for status in status_set:
-            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentense[i], 0),
+            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentense[i], 1e-20),
                                      prev_status)
                                     for prev_status in status_set)
 
@@ -66,6 +66,23 @@ def segment_for_sentense(sentense, sep="  "):
             result += (sentense[i]+sep)
         else:
             result += sentense[i]
+    return result
+
+
+def segment_for_text(text, sep="  ", mode="default"):
+    text = text.replace("\r\n", "\n")
+    lines = text.split("\n")
+    # print(lines)
+    result = ""
+    for line in lines:
+        sentenses_or_line = cut_into_sentense(string=line+"\n") if mode == "sentense" else [line+"\n", ]
+        # print(sentenses_or_line)
+        for sentense in sentenses_or_line:
+            sentense = sentense.strip()
+            if not sentense:
+                continue
+            result += segment_for_sentense(sentense, sep=sep)
+        result += "\n"
     return result
 
 
