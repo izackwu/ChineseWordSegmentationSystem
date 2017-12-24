@@ -3,7 +3,7 @@ A Chinese word segmentation system, mainly based on HMM.
 
 The component of UI is implemented with Flask as a local website.
 
-##How to start?
+## How to start?
 
 * Fork this repository or download all the files.
 * Run `pip install -r requirements.txt` to install all the dependency needed.
@@ -11,7 +11,7 @@ The component of UI is implemented with Flask as a local website.
 
 Quite easy, isn't it?
 
-##Some possible issues?
+## Some possible issues?
 
 * For Windows users, if you fail to Run `pip install -r requirements.txt`:
     * Make sure that you have installed pip properly and added its directory to the PATH environment variable.
@@ -21,7 +21,7 @@ Quite easy, isn't it?
 * Others?
     * Open a new issue and it will be responded as soon as possible.
 
-##How does it work?
+## How does it work?
 
 * Train the HMM model with the data in TrainingSet and get three matrix:
     * InitStatus
@@ -32,7 +32,7 @@ Quite easy, isn't it?
 * According to the status, segment the sentense.
 * As for the Flask UI, it uses Flask-Bootstrap, Flask-WTF and Flask-Script to build a local website.
 
-##How well does it work?
+## How well does it work?
 
 * Well, I have to admit, the accuracy of segmentation is not satisfying enough.
 * F1 Score:
