@@ -1,4 +1,5 @@
 # ChineseWordSegmentationSystem
+
 A Chinese word segmentation system, mainly based on HMM.
 
 The component of UI is implemented with Flask as a local website.
@@ -8,6 +9,7 @@ The component of UI is implemented with Flask as a local website.
 * Fork this repository or download all the files.
 * Run `pip install -r requirements.txt` to install all the dependency needed.
 * Run `python "FlaskUI/FlaskUI.py" runserver` to start the website locally.
+* Vist `127.0.0.1:5000` in the browser.
 
 Quite easy, isn't it?
 
@@ -18,6 +20,10 @@ Quite easy, isn't it?
     * If your system's default encoding is not UTF-8, for example, GBK, do as follows:
         1. Edit the file `Python36\Lib\site-packages\pip\compat\__init__.py`.
         2. Replace `return s.decode('utf-8')`(line 75 ) with  `return s.decode('gbk')`.
+
+* The website doesn't look the same as the [pictures](#how-does-it-look-like)?
+    * Make sure that your computer has access to the Internet, as the website needs to load CSS from CDN.
+
 * Others?
     * Open a new issue and it will be responded as soon as possible.
 
@@ -51,13 +57,21 @@ Quite easy, isn't it?
 
 ![index-2](/Result/screenshots/index-2.png "index")
 
+---
+
 ![sentense-0](/Result/screenshots/sentense-0.png "sentense")
 
 ![sentense-1](/Result/screenshots/sentense-1.png "sentense")
 
+---
+
 ![help-0](/Result/screenshots/help-0.png "help")
 
+---
+
 ![settings-0](/Result/screenshots/settings-0.png "settings")
+
+---
 
 ![copyright-0](/Result/screenshots/copyright-0.png "copyright")
 
