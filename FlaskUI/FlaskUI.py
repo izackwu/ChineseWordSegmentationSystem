@@ -84,7 +84,6 @@ def sentense():
 @app.route("/", methods=["GET", "POST"])
 def index():
     by_file = request.args.get('by_file', False, type=bool)
-    print("FUCK!!!")
     input_form = FileForm() if by_file else TextForm()
     result_form = ResultForm()
     download = False
