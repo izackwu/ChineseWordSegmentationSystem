@@ -6,7 +6,7 @@
 </div>
 <ul class="nav nav-tabs">
   <li{% if not by_file %} class="active"{% endif %}><a href="{{url_for('index')}}">Enter text</a></li>
-  <li{% if by_file %} class="active"{% endif %}><a href="{{url_for('index',by_file='1')}}">Upload file</a></li>
+  <li{% if by_file %} class="active"{% endif %}><a href="{{url_for('index',by_file='1')}}">Upload a file</a></li>
 </ul>
 <br/>
 {{ wtf.quick_form(input_form) }}

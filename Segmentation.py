@@ -1,6 +1,6 @@
 # coding:utf-8
 
-from Training import add_file, cut_into_sentense
+from Training import add_file, cut_into_sentence
 import os
 import re
 
@@ -36,21 +36,21 @@ def init(folder="TrainingResult"):
     return True
 
 
-def segment_for_sentense(sentense, sep="  "):
+def segment_for_sentence(sentence, sep="  "):
     global inited
     assert inited, "Please run init() first!"
     path = dict()
     v = [dict(), ]
     for status in status_set:
-        v[0][status] = init_status_dict[status]*emit_dict[status].get(sentense[0], 0)
+        v[0][status] = init_status_dict[status]*emit_dict[status].get(sentence[0], 0)
         path[status] = status
-    length = len(sentense)
+    length = len(sentence)
     #print(v, path, sep="\n")
     for i in range(1, length):
         v.append(dict())
         new_path = dict()
         for status in status_set:
-            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentense[i], 1e-20),
+            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentence[i], 1e-20),
                                      prev_status)
                                     for prev_status in status_set)
 
@@ -63,9 +63,9 @@ def segment_for_sentense(sentense, sep="  "):
     # print(path[last_status])
     for i in range(length):
         if path[last_status][i] == "S" or path[last_status][i] == "E":
-            result += (sentense[i]+sep)
+            result += (sentence[i]+sep)
         else:
-            result += sentense[i]
+            result += sentence[i]
     return result
 
 
@@ -75,13 +75,13 @@ def segment_for_text(text, sep="  ", mode="default"):
     # print(lines)
     result = ""
     for line in lines:
-        sentenses_or_line = cut_into_sentense(string=line+"\n") if mode == "sentense" else [line+"\n", ]
-        # print(sentenses_or_line)
-        for sentense in sentenses_or_line:
-            sentense = sentense.strip()
-            if not sentense:
+        sentences_or_line = cut_into_sentence(string=line+"\n") if mode == "sentence" else [line+"\n", ]
+        # print(sentences_or_line)
+        for sentence in sentences_or_line:
+            sentence = sentence.strip()
+            if not sentence:
                 continue
-            result += segment_for_sentense(sentense, sep=sep)
+            result += segment_for_sentence(sentence, sep=sep)
         result += "\n"
     return result
 
@@ -100,10 +100,10 @@ def segment_for_file(filepath, save_path=None, sep="  ", mode="default"):
     with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
         buffer = ""
         for real_line in file:
-            sentenses_or_line = cut_into_sentense(string=real_line) if mode == "sentense" else [real_line, ]
-            for sentense in sentenses_or_line:
-                sentense = sentense.strip()
-                result = segment_for_sentense(sentense, sep=sep)
+            sentences_or_line = cut_into_sentence(string=real_line) if mode == "sentence" else [real_line, ]
+            for sentence in sentences_or_line:
+                sentence = sentence.strip()
+                result = segment_for_sentence(sentence, sep=sep)
                 buffer += result
             buffer += "\n"
             if len(buffer) >= (1 << 10):
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         exit()
     for file in testing_files:
         print("##Start to handle {0}.".format(file))
-        if segment_for_file(file, mode="sentense"):
+        if segment_for_file(file, mode="sentence"):
             print("##{0} has been handled successfully.".format(file))
         else:
             print("##Failed to handle {0}.".format(file))

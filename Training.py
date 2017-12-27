@@ -32,18 +32,18 @@ def add_file(filepath, file_list, open_folder=False):
                 add_file(os.path.join(filepath, path), file_list, open_folder=True)
 
 
-def cut_into_sentense(string=None, filepath=None):
+def cut_into_sentence(string=None, filepath=None):
     seperator_Chinese = r"！？，。：……；"
     seperator_English = r"!?,:;\n"
     seperator = seperator_Chinese+seperator_English
     if string:
         return [s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), string+"\n") if s.strip()]
     elif filepath:
-        sentenses = list()
+        sentences = list()
         with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
             for line in file:
-                sentenses.extend(s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), line) if s.strip())
-        return sentenses
+                sentences.extend(s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), line) if s.strip())
+        return sentences
     else:
         return None
 
@@ -58,8 +58,8 @@ def statistic(filepath, mode="line"):
     global emit_dict
     with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
         for real_line in file:
-            sentense_or_line = cut_into_sentense(string=real_line) if mode == "sentense" else [real_line, ]
-            for line in sentense_or_line:
+            sentence_or_line = cut_into_sentence(string=real_line) if mode == "sentence" else [real_line, ]
+            for line in sentence_or_line:
                 line = line.strip()
                 if not line:
                     continue
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         exit()
     for i, filepath in enumerate(training_files):
         print("##Start to handle {0}.".format(filepath))
-        statistic(filepath, mode="sentense")
+        statistic(filepath, mode="sentence")
         print("##{0} has been handled successfully.".format(filepath))
     #print(line_num, all_characters_set, init_status_dict, trans_dict, status_set, status_count_dict, emit_dict, sep="\n")
     save_folder = input("Done! Please enter in which folder to save the training results:")

@@ -33,9 +33,9 @@ Quite easy, isn't it?
     * InitStatus
     * TransProbMatrix
     * EmitProbMatrix
-* When segmenting words, load these matrix and cut the whole text into sentenses to process.
-* Use Viterbi algorithm to find the most possible status of every character in a sentense.
-* According to the status, segment the sentense.
+* When segmenting words, load these matrix and cut the whole text into sentences to process.
+* Use Viterbi algorithm to find the most possible status of every character in a sentence.
+* According to the status, segment the sentence.
 * As for the Flask UI, it uses Flask-Bootstrap, Flask-WTF and Flask-Script to build a local website.
 
 ## How well does it work?
@@ -59,9 +59,9 @@ Quite easy, isn't it?
 
 ---
 
-![sentense-0](/Result/screenshots/sentense-0.png "sentense")
+![sentence-0](/Result/screenshots/sentence-0.png "sentence")
 
-![sentense-1](/Result/screenshots/sentense-1.png "sentense")
+![sentence-1](/Result/screenshots/sentence-1.png "sentence")
 
 ---
 

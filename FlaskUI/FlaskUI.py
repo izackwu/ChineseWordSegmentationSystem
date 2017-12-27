@@ -6,7 +6,7 @@ from wtforms import SubmitField, StringField, TextField, RadioField, FileField, 
 from wtforms.validators import Required, Optional, DataRequired
 import sys
 sys.path.append("../")
-from Segmentation import init, cut_into_sentense, segment_for_sentense, segment_for_text
+from Segmentation import init, cut_into_sentence, segment_for_sentence, segment_for_text
 from re import sub
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "The beacon."
@@ -18,7 +18,7 @@ manage = Manager(app)
 class TextForm(FlaskForm):
     raw_text = TextAreaField("Please input the raw text here.", validators=[Required(), ])
     mode = RadioField("Please select the mode.",
-                      choices=(("0", "Cut into sentenses first"), ("1", "Segment directly")),
+                      choices=(("0", "Cut into sentences first"), ("1", "Segment directly")),
                       validators=[DataRequired()]
                       )
     submit = SubmitField("Segment")
@@ -27,7 +27,7 @@ class TextForm(FlaskForm):
 class FileForm(FlaskForm):
     file = FileField("Please upload your file.", validators=[Required()])
     mode = RadioField("Please select the mode.",
-                      choices=(("0", "Cut into sentenses first"), ("1", "Segment directly")),
+                      choices=(("0", "Cut into sentences first"), ("1", "Segment directly")),
                       validators=[DataRequired()]
                       )
     submit = SubmitField("Segment")
@@ -45,7 +45,7 @@ class SettingsForm(FlaskForm):
 def segment(text):
     global user_settings
     rules = dict()
-    result = segment_for_text(text, mode="sentense")
+    result = segment_for_text(text, mode="sentence")
     try:
         rules = {from_: to for from_, to in [(a.split("》》")[0], a.split('》》')[1])for a in user_settings.split('\n')]}
     except:
@@ -67,18 +67,21 @@ def download():
     return response
 
 
-@app.route("/sentense", methods=["GET", "POST"])
-def sentense():
+@app.route("/sentence", methods=["GET", "POST"])
+def sentence():
     global raw_text
     # print(raw_text)
-    sentenses = cut_into_sentense(raw_text)
-    # print(sentenses)
-    num = len(sentenses)
+    try:
+        sentences = cut_into_sentence(raw_text)
+    except:
+        abort(404)
+    # print(sentences)
+    num = len(sentences)
     if num > 50:
-        flash("Too many sentenses to display. Only display the first 50 sentenses.")
+        flash("Too many sentences to display. Only display the first 50 sentences.")
         num = 50
-    result_sentenses = [segment_for_sentense(sentenses[i]) for i in range(num)]
-    return render_template("sentense.html", sentenses=sentenses[0:num], result_sentenses=result_sentenses, num=num)
+    result_sentences = [segment_for_sentence(sentences[i]) for i in range(num)]
+    return render_template("sentence.html", sentences=sentences[0:num], result_sentences=result_sentences, num=num)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -89,7 +92,7 @@ def index():
     download = False
     if input_form.validate_on_submit():
         mode = input_form.mode.data
-        print(mode, type(mode))
+        #print(mode, type(mode))
         global raw_text
         global result_text
         raw_text = ""
@@ -103,19 +106,19 @@ def index():
                 raw_text = "出错啦！请检查输入文件编码格式！"
         #print("raw_text", raw_text)
         if mode == "0":
-            return redirect(url_for("sentense"))
+            return redirect(url_for("sentence"))
         result_text = segment(raw_text)
         result_form.result_text.data = result_text
         download = True
     else:
         try:
             if input_form.raw_text.data:
-                flash("Please select whether to cut into sentenses first!")
+                flash("Please select whether to cut into sentences first!")
         except:
             pass
         try:
             if input_form.file.data:
-                flash("Please select whether to cut into sentenses first!")
+                flash("Please select whether to cut into sentences first!")
         except:
             pass
     return render_template("index.html", by_file=by_file, input_form=input_form, result_form=result_form, download=download)
@@ -153,7 +156,8 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    init(folder="../Result/sentense/Sentense_TrainingResult/")
+    if not init(folder="../Result/sentence/sentence_TrainingResult/"):
+        exit()
     global user_settings
-    user_settings = "生生灯火》》生生  灯火\n明暗无辄》》明暗无辄"
+    user_settings = "生生灯火》》生生  灯火\n明暗无辄》》明暗  无辄"
     manage.run()
