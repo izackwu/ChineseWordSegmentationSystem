@@ -51,29 +51,29 @@ Quite easy, isn't it?
 
 ## How does it look like?
 
-![index-0](/Result/screenshots/index-0.png "index")
+![index-0](/Result/screenshots/Index-0.png "index")
 
-![index-1](/Result/screenshots/index-1.png "index")
+![index-1](/Result/screenshots/Index-1.png "index")
 
-![index-2](/Result/screenshots/index-2.png "index")
-
----
-
-![sentence-0](/Result/screenshots/sentence-0.png "sentence")
-
-![sentence-1](/Result/screenshots/sentence-1.png "sentence")
+![index-2](/Result/screenshots/Index-2.png "index")
 
 ---
 
-![help-0](/Result/screenshots/help-0.png "help")
+![sentence-0](/Result/screenshots/Sentence-0.png "sentence")
+
+![sentence-1](/Result/screenshots/Sentence-1.png "sentence")
 
 ---
 
-![settings-0](/Result/screenshots/settings-0.png "settings")
+![help-0](/Result/screenshots/Help-0.png "help")
 
 ---
 
-![copyright-0](/Result/screenshots/copyright-0.png "copyright")
+![settings-0](/Result/screenshots/Settings-0.png "settings")
+
+---
+
+![copyright-0](/Result/screenshots/Copyright-0.png "copyright")
 
 ## Reference
 
