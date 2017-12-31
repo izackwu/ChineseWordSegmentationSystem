@@ -10,19 +10,34 @@ init_status_dict = dict()
 trans_dict = dict()
 status_set = {"S", "B", "M", "E"}
 emit_dict = dict()
+lexicon = set()
+max_length = 0
 inited = False
+INF = 1e-10
 
 
-def init(folder="TrainingResult"):
+def init(folder="Result/sentence/sentence_TrainingResult/"):
     global init_status_dict
     global trans_dict
     global status_set
     global emit_dict
     global inited
+    global lexicon
+    global max_length
     if not folder:
         folder = "TrainingResult"
-    file_list = ["InitStatus.data", "TransProbMatrix.data", "EmitProbMatrix.data"]
+    file_list = ["InitStatus.data", "TransProbMatrix.data", "EmitProbMatrix.data", ]
     data_list = [init_status_dict, trans_dict, emit_dict]
+    try:
+        with open(os.path.join(folder, "Lexicon.data"), mode="r", encoding="utf-8") as file:
+            max_length = int(file.readline())
+            for line in file:
+                lexicon.add(line.strip())
+    except:
+        print("Failed to load Lexicon.")
+        return False
+    else:
+        print("Load Lexicon successfully.")
     for i in range(0, 3):
         try:
             with open(os.path.join(folder, file_list[i]), mode="r", encoding="utf-8") as file:
@@ -36,7 +51,7 @@ def init(folder="TrainingResult"):
     return True
 
 
-def segment_for_sentence(sentence, sep="  "):
+def segment_for_sentence_HMM(sentence, sep="  "):
     global inited
     assert inited, "Please run init() first!"
     path = dict()
@@ -50,7 +65,7 @@ def segment_for_sentence(sentence, sep="  "):
         v.append(dict())
         new_path = dict()
         for status in status_set:
-            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentence[i], 1e-20),
+            prob, prev_status = max((v[i-1][prev_status]*trans_dict[prev_status][status]*emit_dict[status].get(sentence[i], INF),
                                      prev_status)
                                     for prev_status in status_set)
 
@@ -67,6 +82,39 @@ def segment_for_sentence(sentence, sep="  "):
         else:
             result += sentence[i]
     return result
+
+
+def segment_for_sentence(sentence, sep="  "):
+    global inited
+    global lexicon
+    global max_length
+    assert inited, "Please run init() first!"
+    result_list = list()
+    unknown_string = ""
+    while sentence:
+        #print("sentence:", sentence)
+        current_max_length = min(max_length, len(sentence))
+        find = ""
+        for i in range(current_max_length, 1, -1):
+            # print(sentence[:i])
+            if sentence[:i] in lexicon:
+                find = sentence[:i]
+                #print("find:", sentence[:i])
+                sentence = sentence[i:]
+                break
+        if not find:
+            unknown_string = unknown_string + sentence[0]
+            sentence = sentence[1:]
+        elif unknown_string:
+            #print([word for word in segment_for_sentence_HMM(unknown_string, sep).split(sep) if word.strip()])
+            result_list.extend(word for word in segment_for_sentence_HMM(unknown_string, sep).split(sep) if word.strip())
+            result_list.append(find)
+            unknown_string = ""
+        else:
+            result_list.append(find)
+    if unknown_string:
+        result_list.extend(word for word in segment_for_sentence_HMM(unknown_string, sep).split(sep) if word.strip())
+    return sep.join(result_list)+sep
 
 
 def segment_for_text(text, sep="  ", mode="default"):

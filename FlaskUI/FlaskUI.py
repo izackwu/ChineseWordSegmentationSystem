@@ -156,7 +156,7 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    if not init(folder="../Result/sentence/sentence_TrainingResult/"):
+    if not init(folder="../Result/MM/MM_TrainingResult/"):
         exit()
     global user_settings
     user_settings = "生生灯火》》生生  灯火\n明暗无辄》》明暗  无辄"

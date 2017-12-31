@@ -11,6 +11,7 @@ trans_dict = dict()
 status_set = {"S", "B", "M", "E"}
 status_count_dict = dict()
 emit_dict = dict()
+lexicon = set()
 
 
 def add_file(filepath, file_list, open_folder=False):
@@ -33,8 +34,8 @@ def add_file(filepath, file_list, open_folder=False):
 
 
 def cut_into_sentence(string=None, filepath=None):
-    seperator_Chinese = r"！？，。：……；"
-    seperator_English = r"!?,:;\n"
+    seperator_Chinese = r"！？，。：……；／"
+    seperator_English = r"!?,:;\n/"
     seperator = seperator_Chinese+seperator_English
     if string:
         return [s.strip() for s in re.findall(r".*?[{0}]+".format(seperator), string+"\n") if s.strip()]
@@ -91,6 +92,14 @@ def statistic(filepath, mode="line"):
                         trans_dict[line_status_list[i-1]][status] += 1
 
 
+def build_lexicon(filepath):
+    global lexicon
+    with open(filepath, mode="r", encoding="utf-8", errors="ignore") as file:
+        for line in file:
+            word_list = re.split(r"[\s]{2,}", line.strip())
+            lexicon.update(word_list)
+
+
 def save_training_result(folder="TrainingResult"):
     global line_num
     global all_characters_set
@@ -114,6 +123,21 @@ def save_training_result(folder="TrainingResult"):
         for i in range(3):
             with open(os.path.join(folder, file_list[i]), mode="w", encoding="utf-8") as file:
                 file.write(str(data_list[i]))
+    except:
+        print("Failed to write data into file.")
+    else:
+        print("##Success!")
+
+
+def save_lexicon(folder="TrainingResult"):
+    global lexicon
+    max_length_of_word = min(10, max(map(len, lexicon)))
+    try:
+        with open(os.path.join(folder, "Lexicon.data"), mode="w", encoding="utf-8") as file:
+            file.write(str(max_length_of_word)+"\n")
+            for word in lexicon:
+                if word.strip() and len(word) <= 10:
+                    file.write(word+"\n")
     except:
         print("Failed to write data into file.")
     else:
@@ -144,9 +168,11 @@ if __name__ == "__main__":
         exit()
     for i, filepath in enumerate(training_files):
         print("##Start to handle {0}.".format(filepath))
-        statistic(filepath, mode="sentence")
+        #statistic(filepath, mode="sentence")
+        build_lexicon(filepath)
         print("##{0} has been handled successfully.".format(filepath))
     #print(line_num, all_characters_set, init_status_dict, trans_dict, status_set, status_count_dict, emit_dict, sep="\n")
     save_folder = input("Done! Please enter in which folder to save the training results:")
-    save_training_result(save_folder)
+    # save_training_result(save_folder)
+    save_lexicon(save_folder)
     #print(line_num, all_characters_set, init_status_dict, trans_dict, status_set, status_count_dict, emit_dict, sep="\n")
