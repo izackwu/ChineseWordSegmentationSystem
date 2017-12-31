@@ -37,13 +37,14 @@ Quite easy, isn't it?
 * Use Viterbi algorithm to find the most possible status of every character in a sentence.
 * According to the status, segment the sentence.
 * As for the Flask UI, it uses Flask-Bootstrap, Flask-WTF and Flask-Script to build a local website.
+* UPDATE: The latest version combines HMM with Maximum Matching Algothm.
 
 ## How well does it work?
 
 * Well, I have to admit, the accuracy of segmentation is not satisfying enough.
 * F1 Score:
-    * pku_test: 0.763
-    * msr_test: 0.793
+    * pku_test: 0.763 --> 0.829(the latest version)
+    * msr_test: 0.793 --> 0.889(the latest version)
 * As comparision, F1 Score of [Jieba](https://github.com/fxsjy/jieba)(a famous Python Chinese word segmentation module):
     * pku_test: 0.818
     * msr_test: 0.815
